@@ -1,4 +1,12 @@
-all: zhttpto
+PROGRAM_NAME = zhttpto
 
-zhttpto: 
-	rustc zhttpto.rs
+all: $(PROGRAM_NAME)
+
+$(PROGRAM_NAME): 
+	rustc $(PROGRAM_NAME).rs
+
+clean :
+	$(RM) $(PROGRAM_NAME)
+    
+run: ${PROGRAM_NAME}
+	./${PROGRAM_NAME}
