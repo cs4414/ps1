@@ -19,7 +19,7 @@ use std::str;
 fn main() {
 
     let addr = "127.0.0.1:4414";
-    let mut acceptor = net::tcp::TcpListener::bind(addr).listen().unwrap();
+    let mut acceptor = net::tcp::TcpListener::bind(addr).listen();
 
     println!("Listening on [{}] ...", addr);
 
