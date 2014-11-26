@@ -40,7 +40,7 @@ fn main() {
             }
 
             let mut buf = [0, ..500];
-            stream.read(&mut buf);
+            let _ = stream.read(&mut buf);
             let request_str = str::from_utf8(&buf);
             println!("Received request :\n{}", request_str);
 
@@ -54,7 +54,7 @@ fn main() {
                  <body>
                  <h1>Greetings, Krusty!</h1>
                  </body></html>\r\n";
-            stream.write(response.as_bytes());
+            let _ = stream.write(response.as_bytes());
             println!("Connection terminates.");
         });
     }
