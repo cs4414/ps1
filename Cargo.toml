@@ -1,0 +1,5 @@
+[package]
+
+name = "ps1"
+version = "0.0.1"
+authors = ["Tamir Duberstein <tamird@squareup.com>"]
