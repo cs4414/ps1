@@ -58,4 +58,6 @@ fn main() {
             println!("Connection terminates.");
         });
     }
+
+    drop(acceptor);
 }
