@@ -18,11 +18,10 @@ use std::str;
 
 fn main() {
 
-    let ip_addres = "127.0.0.1";
-    let port = 4414;
-    let mut acceptor = net::tcp::TcpListener::bind(ip_addres, port).listen().unwrap();
+    let addr = "127.0.0.1:4414";
+    let mut acceptor = net::tcp::TcpListener::bind(addr).listen().unwrap();
 
-    println!("Listening on [{}] ...", ip_addres);
+    println!("Listening on [{}] ...", addr);
 
     for stream in acceptor.incoming() {
         // Spawn a task to handle the connection
@@ -41,8 +40,8 @@ fn main() {
             }
 
             let mut buf = [0, ..500];
-            stream.read(buf);
-            let request_str = str::from_utf8(buf);
+            stream.read(&mut buf);
+            let request_str = str::from_utf8(&buf);
             println!("Received request :\n{}", request_str);
 
             let response: Box<&str> =
