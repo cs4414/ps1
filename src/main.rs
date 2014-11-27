@@ -25,31 +25,33 @@ fn main() {
     for stream in acceptor.incoming() {
         match stream {
             Err(_) => (),
-            // Spawn a task to handle the connection
-            Ok(mut stream) => spawn(proc() {
-                match stream.peer_name() {
-                    Err(_) => (),
-                    Ok(pn) => println!("Received connection from: [{}]", pn),
-                }
+            Ok(mut stream) => {
+                // Spawn a task to handle the connection
+                spawn(proc() {
+                    match stream.peer_name() {
+                        Err(_) => (),
+                        Ok(pn) => println!("Received connection from: [{}]", pn),
+                    }
 
-                let mut buf = [0, ..500];
-                let _ = stream.read(&mut buf);
-                let request_str = str::from_utf8(&buf);
-                println!("Received request:\n{}", request_str);
+                    let mut buf = [0, ..500];
+                    let _ = stream.read(&mut buf);
+                    let request_str = str::from_utf8(&buf);
+                    println!("Received request:\n{}", request_str);
 
-                let response =
-                    "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n
-                     <doctype !html><html><head><title>Hello, Rust!</title>
-                     <style>body { background-color: #111; color: #FFEEAA }
-                            h1 { font-size:2cm; text-align: center; color: black; text-shadow: 0 0 4mm red}
-                            h2 { font-size:2cm; text-align: center; color: black; text-shadow: 0 0 4mm green}
-                     </style></head>
-                     <body>
-                     <h1>Greetings, Krusty!</h1>
-                     </body></html>\r\n";
-                let _ = stream.write(response.as_bytes());
-                println!("Connection terminates.");
-            }),
+                    let response =
+                        "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n
+                         <doctype !html><html><head><title>Hello, Rust!</title>
+                         <style>body { background-color: #111; color: #FFEEAA }
+                                h1 { font-size:2cm; text-align: center; color: black; text-shadow: 0 0 4mm red}
+                                h2 { font-size:2cm; text-align: center; color: black; text-shadow: 0 0 4mm green}
+                         </style></head>
+                         <body>
+                         <h1>Greetings, Krusty!</h1>
+                         </body></html>\r\n";
+                    let _ = stream.write(response.as_bytes());
+                    println!("Connection terminates.");
+                })
+            },
         }
     }
 
