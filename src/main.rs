@@ -11,15 +11,14 @@
 // Weilin Xu and David Evans
 // Version 0.3
 
-#![feature(globs)]
-
-use std::io::*;
+use std::io::TcpListener;
+use std::io::{Acceptor, Listener};
 use std::str;
 
 fn main() {
-
     let addr = "127.0.0.1:4414";
-    let mut acceptor = net::tcp::TcpListener::bind(addr).listen();
+
+    let mut acceptor = TcpListener::bind(addr).unwrap().listen().unwrap();
 
     println!("Listening on [{}] ...", addr);
 
@@ -36,7 +35,7 @@ fn main() {
                 let mut buf = [0, ..500];
                 let _ = stream.read(&mut buf);
                 let request_str = str::from_utf8(&buf);
-                println!("Received request :\n{}", request_str);
+                println!("Received request:\n{}", request_str);
 
                 let response =
                     "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n
