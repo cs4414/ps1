@@ -11,9 +11,9 @@
 // Weilin Xu and David Evans
 // Version 0.3
 
-use std::io::TcpListener;
-use std::io::{Acceptor, Listener};
+use std::io::{Acceptor, Listener, TcpListener};
 use std::str;
+use std::thread::Thread;
 
 fn main() {
     let addr = "127.0.0.1:4414";
@@ -26,17 +26,19 @@ fn main() {
         match stream {
             Err(_) => (),
             Ok(mut stream) => {
-                // Spawn a task to handle the connection
-                spawn(proc() {
+                // Spawn a thread to handle the connection
+                Thread::spawn(move|| {
                     match stream.peer_name() {
                         Err(_) => (),
                         Ok(pn) => println!("Received connection from: [{}]", pn),
                     }
 
-                    let mut buf = [0, ..500];
+                    let mut buf = [0 ;500];
                     let _ = stream.read(&mut buf);
-                    let request_str = str::from_utf8(&buf);
-                    println!("Received request:\n{}", request_str);
+                    match str::from_utf8(&buf) {
+                        Err(error) => println!("Received request error:\n{}", error),
+                        Ok(body) => println!("Recieved request body:\n{}", body),
+                    }
 
                     let response =
                         "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n
@@ -50,7 +52,7 @@ fn main() {
                          </body></html>\r\n";
                     let _ = stream.write(response.as_bytes());
                     println!("Connection terminates.");
-                })
+                });
             },
         }
     }
