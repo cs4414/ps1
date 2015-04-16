@@ -11,24 +11,25 @@
 // Weilin Xu and David Evans
 // Version 0.3
 
-use std::io::{Acceptor, Listener, TcpListener};
+use std::io::{Read, Write};
+use std::net::TcpListener;
 use std::str;
-use std::thread::Thread;
+use std::thread;
 
 fn main() {
     let addr = "127.0.0.1:4414";
 
-    let mut acceptor = TcpListener::bind(addr).unwrap().listen().unwrap();
+    let listener = TcpListener::bind(addr).unwrap();
 
     println!("Listening on [{}] ...", addr);
 
-    for stream in acceptor.incoming() {
+    for stream in listener.incoming() {
         match stream {
             Err(_) => (),
             Ok(mut stream) => {
                 // Spawn a thread to handle the connection
-                Thread::spawn(move|| {
-                    match stream.peer_name() {
+                thread::spawn(move|| {
+                    match stream.peer_addr() {
                         Err(_) => (),
                         Ok(pn) => println!("Received connection from: [{}]", pn),
                     }
@@ -57,5 +58,5 @@ fn main() {
         }
     }
 
-    drop(acceptor);
+    drop(listener);
 }
