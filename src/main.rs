@@ -35,7 +35,7 @@ fn main() {
                     }
 
                     let mut buf = [0 ;500];
-                    let _ = stream.read(&mut buf);
+                    stream.read(&mut buf).unwrap();
                     match str::from_utf8(&buf) {
                         Err(error) => println!("Received request error:\n{}", error),
                         Ok(body) => println!("Recieved request body:\n{}", body),
@@ -51,7 +51,7 @@ fn main() {
                          <body>
                          <h1>Greetings, Krusty!</h1>
                          </body></html>\r\n";
-                    let _ = stream.write(response.as_bytes());
+                    stream.write(response.as_bytes()).unwrap();
                     println!("Connection terminates.");
                 });
             },
