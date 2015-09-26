@@ -2,7 +2,7 @@
 // zhttpto.rs
 //
 // Starting code for PS1
-// Running on Rust 0.12
+// Running on Rust 1+
 //
 // Note that this code has serious security risks! You should not run it
 // on any system with access to sensitive files.
